@@ -1,6 +1,6 @@
 'use client';
 
-import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
+import { FieldErrors, FieldValues, UseFormRegister, ValidationRule } from 'react-hook-form';
 
 interface InputProps {
   id: string;
@@ -9,20 +9,33 @@ interface InputProps {
   disabled?: boolean;
   formatPrice?: boolean;
   required?: boolean;
+  pattern?: ValidationRule<RegExp> | undefined;
+  minLength?: ValidationRule<number>;
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors;
 }
 
 import { BiDollar } from 'react-icons/bi';
 
-const Input: React.FC<InputProps> = ({ id, label, type = 'text', disabled, formatPrice, required, register, errors }) => {
+const Input: React.FC<InputProps> = ({
+  id,
+  label,
+  type = 'text',
+  disabled,
+  formatPrice,
+  required,
+  pattern = undefined,
+  minLength = 0,
+  register,
+  errors,
+}) => {
   return (
     <div className="relative w-full">
       {formatPrice && <BiDollar size={24} className="absolute left-2 top-5 text-neutral-700" />}
       <input
         id={id}
         disabled={disabled}
-        {...register(id, { required })}
+        {...register(id, { required, pattern: pattern, minLength: minLength })}
         placeholder=" "
         type={type}
         className={`peer w-full rounded-md border-2 bg-white p-4 pt-6 font-light outline-none transition disabled:cursor-not-allowed disabled:opacity-70 ${
